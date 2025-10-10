@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react"
 import Link from "next/link"
 import { gsap } from "gsap"
-import { Facebook, Twitter, Instagram, Linkedin, Github, Mail, Phone, MapPin } from "lucide-react"
+import { Facebook, Twitter, Linkedin, Github, Mail, Phone, MapPin } from "lucide-react"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { useState } from "react"
@@ -112,7 +112,7 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 text-purple-500 mr-3 mt-1" />
-                <a href="https://3d-portfolio-seven-xi.vercel.app/" className="text-gray-400 hover:text-purple-500">Portfolio</a>
+                <a href="https://eventhorizonky.vercel.app/" className="text-gray-400 hover:text-purple-500">Portfolio</a>
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 text-purple-500 mr-3" />
@@ -124,13 +124,10 @@ export default function Footer() {
                 <a href="https://x.com/EventHorizonKY" className="text-gray-400 hover:text-purple-500 transition-colors">
                   <Twitter className="h-5 w-5" />
                 </a>
-                <a href="https://www.instagram.com/siser_ins17/" className="text-gray-400 hover:text-purple-500 transition-colors">
-                  <Instagram className="h-5 w-5" />
-                </a>
                 <a href="https://www.linkedin.com/in/kshitij-kumar-yadav-71a695289/" className="text-gray-400 hover:text-purple-500 transition-colors">
                   <Linkedin className="h-5 w-5" />
                 </a>
-                <a href="https://github.com/Siser-Pratap" className="text-gray-400 hover:text-purple-500 transition-colors">
+                <a href="https://github.com/KY-Kshitij" className="text-gray-400 hover:text-purple-500 transition-colors">
                   <Github className="h-5 w-5" />
                 </a>
             </div>
