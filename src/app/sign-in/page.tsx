@@ -79,6 +79,14 @@ export default function SignIn() {
 
     if (!email || !password) {
       setError("Please fill in all fields")
+      setsigninloading(false);
+      return
+    }
+
+    // Email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Please enter a valid email address")
+      setsigninloading(false);
       return
     }
 
@@ -94,8 +102,19 @@ export default function SignIn() {
       toast.success('Sign-in Successfull');
       router.push("/user/chats");
       setIsLoading(true);
-    } catch (err) {
-      setError("Invalid email or password")
+    } catch (err: any) {
+      console.error("Sign-in error:", err);
+      if (err.response?.status === 404) {
+        setError("No account found with this email address");
+      } else if (err.response?.status === 401) {
+        setError("Invalid email or password");
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else if (err.code === 'NETWORK_ERROR' || !err.response) {
+        setError("Network error. Please check your connection and try again.");
+      } else {
+        setError("An error occurred during sign-in. Please try again.");
+      }
       setsigninloading(false);
     }
   }
@@ -146,6 +165,9 @@ export default function SignIn() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="pl-10 bg-gray-700 border-gray-600 focus:border-purple-500 text-white"
+              autoComplete="email"
+              name="email"
+              id="email"
               required
             />
           </div>
@@ -158,6 +180,9 @@ export default function SignIn() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="pl-10 bg-gray-700 border-gray-600 focus:border-purple-500 text-white"
+              autoComplete="current-password"
+              name="password"
+              id="password"
               required
             />
           </div>
@@ -190,9 +215,32 @@ export default function SignIn() {
           </Link>
         </p>
         <div className="flex justify-center items-center">
-          <button className="guest absolute mt-6 text-center text-sm text-gray-400 hover:text-purple-400 transition-colors" onClick={()=>{
-            setEmail("kshitijyadav010@gmail.com");
-            setPassword("SISER123@jay");
+          <button className="guest absolute mt-6 text-center text-sm text-gray-400 hover:text-purple-400 transition-colors" onClick={async ()=>{
+            setEmail("test123@test.com");
+            setPassword("Test@1234");
+            
+            // Auto-submit the form after setting credentials
+            setTimeout(async () => {
+              try {
+                setError("");
+                setsigninloading(true);
+                
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`, {
+                  email: "test123@test.com",
+                  password: "Test@1234",
+                });
+                const { token } = response.data;
+                localStorage.setItem("authToken", token);
+                document.cookie = `authToken=${token}; path=/; max-age=86400; secure; samesite=strict`;
+                setsigninloading(false);
+                toast.success('Guest login successful!');
+                router.push("/user/chats");
+                setIsLoading(true);
+              } catch (err) {
+                setError("Guest login failed. Please try again.");
+                setsigninloading(false);
+              }
+            }, 100);
           }}>Guest Login</button>
       </div>
       </div>}

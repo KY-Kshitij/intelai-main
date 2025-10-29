@@ -6,11 +6,14 @@ export function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   const isAuthRoute = pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up');
+  const isProtectedRoute = pathname.startsWith('/user/');
   
-  if (!token && pathname.startsWith('/user/chats')) {
+  // Redirect to sign-in if accessing protected routes without token
+  if (!token && isProtectedRoute) {
     return NextResponse.redirect(new URL('/sign-in', request.url));
   }
 
+  // Redirect authenticated users away from auth pages
   if (token && isAuthRoute) {
     return NextResponse.redirect(new URL('/user/chats', request.url));
   }
@@ -23,6 +26,6 @@ export const config = {
     '/',
     '/sign-in',
     '/sign-up',
-    '/user/chats',
+    '/user/:path*',
   ],
 };

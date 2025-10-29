@@ -40,8 +40,6 @@ interface historyProps {
   }>;
 }
 
-const token = localStorage.getItem("authToken");
-
 export default function ChatPage({ params }: PageProps) {
   const { chatId } = params;
   const router = useRouter()
@@ -54,6 +52,7 @@ export default function ChatPage({ params }: PageProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [showImageUpload, setShowImageUpload] = useState(false)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [token, setToken] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const chatContainerRef = useRef<HTMLDivElement>(null)
@@ -92,7 +91,15 @@ export default function ChatPage({ params }: PageProps) {
 
 
 
+  // Get token from localStorage on component mount
   useEffect(() => {
+    const authToken = localStorage.getItem("authToken");
+    setToken(authToken);
+  }, []);
+
+  useEffect(() => {
+    if (!token) return; // Don't fetch if no token
+    
     // Fetch chat data from the backend API
     const fetchChatData = async () => {
       try {
@@ -123,7 +130,7 @@ export default function ChatPage({ params }: PageProps) {
     };
 
     fetchChatData();
-  }, [id]);
+  }, [id, token]);
 
   
 

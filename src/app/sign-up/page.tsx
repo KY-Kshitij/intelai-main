@@ -196,13 +196,23 @@ export default function SignUp() {
       });
       console.log(response.data);
   
-      // Save the token in localStorage
+      // Save the token in localStorage and set cookie for middleware
       const { token } = response.data;
       localStorage.setItem("authToken", token);
-      toast.success("Sign-up Successfull, Redirecting to Sign-in");
-      router.push("/sign-in")
-    } catch (err) {
-      setError("An error occurred during sign up")
+      document.cookie = `authToken=${token}; path=/; max-age=86400; secure; samesite=strict`;
+      toast.success("Sign-up Successful! Redirecting to chats...");
+      router.push("/user/chats");
+    } catch (err: any) {
+      console.error("Signup error:", err);
+      if (err.response?.status === 400) {
+        setError("An account with this email already exists. Please sign in instead.");
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else if (err.code === 'NETWORK_ERROR' || !err.response) {
+        setError("Network error. Please check your connection and try again.");
+      } else {
+        setError("An error occurred during sign up. Please try again.");
+      }
     } finally {
       setIsLoading(false)
     }
@@ -258,6 +268,8 @@ export default function SignUp() {
                   value={formData.name}
                   onChange={handleChange}
                   className="pl-10 bg-gray-700 border-gray-600 focus:border-purple-500 text-white"
+                  autoComplete="name"
+                  id="name"
                   required
                 />
               </div>
@@ -271,6 +283,8 @@ export default function SignUp() {
                   value={formData.email}
                   onChange={handleChange}
                   className="pl-10 bg-gray-700 border-gray-600 focus:border-purple-500 text-white"
+                  autoComplete="email"
+                  id="signup-email"
                   required
                 />
               </div>
@@ -295,6 +309,8 @@ export default function SignUp() {
                   value={formData.password}
                   onChange={handleChange}
                   className="pl-10 bg-gray-700 border-gray-600 focus:border-purple-500 text-white"
+                  autoComplete="new-password"
+                  id="password"
                   required
                 />
               </div>
@@ -366,6 +382,8 @@ export default function SignUp() {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   className="pl-10 bg-gray-700 border-gray-600 focus:border-purple-500 text-white"
+                  autoComplete="new-password"
+                  id="confirmPassword"
                   required
                 />
               </div>

@@ -300,7 +300,20 @@ useEffect(() => {
       </div>
 
       {/* Main content */}
-      <div className="main-content flex-1 overflow-hidden">{children}</div>
+      <div className="main-content flex-1 overflow-hidden">
+        {/* Guest account notification banner */}
+        {token && name === "test123@test.com" && (
+          <div className="bg-yellow-500/10 border-b border-yellow-500/20 px-4 py-2 text-center">
+            <p className="text-yellow-400 text-sm">
+              <span className="font-medium">Guest Account:</span> Your chats are temporary. 
+              <Link href="/sign-up" className="text-yellow-300 hover:text-yellow-200 underline ml-1">
+                Create an account
+              </Link> to save your conversations permanently.
+            </p>
+          </div>
+        )}
+        {children}
+      </div>
     </div>
 
   </>
